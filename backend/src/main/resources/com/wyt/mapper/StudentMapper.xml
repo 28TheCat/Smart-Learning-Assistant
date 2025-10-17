@@ -1,0 +1,124 @@
+<!--定义Mapper映射文件的约束和基本结构-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyt.mapper.StudentMapper">
+    <select id="list" resultType="com.wyt.pojo.Student">
+        SELECT
+        s.*,
+        c.name AS clazzName,
+        CASE
+        WHEN s.degree = 1 THEN '初中'
+        WHEN s.degree = 2 THEN '高中'
+        WHEN s.degree = 3 THEN '大专'
+        WHEN s.degree = 4 THEN '本科'
+        WHEN s.degree = 5 THEN '硕士'
+        WHEN s.degree = 6 THEN '博士'
+        ELSE '其他'
+        END AS degreeName,
+        CASE
+        WHEN s.gender = 1 THEN '男'
+        WHEN s.gender = 2 THEN '女'
+        ELSE '未知'
+        END AS genderName
+        FROM student s
+        LEFT JOIN clazz c ON s.clazz_id = c.id
+        <where>
+            <if test="name != null and name != ''">
+                s.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="clazzId != null">
+                AND s.clazz_id = #{clazzId}
+            </if>
+            <if test="degree != null">
+                AND s.degree = #{degree}
+            </if>
+        </where>
+        ORDER BY s.update_time DESC
+    </select>
+    <insert id="save" parameterType="com.wyt.pojo.Student">
+        INSERT INTO student (
+            name,
+            no,
+            gender,
+            phone,
+            id_card,
+            is_college,
+            address,
+            degree,
+            graduation_date,
+            clazz_id,
+            create_time,
+            update_time
+        )
+        VALUES (
+                   #{name},
+                   #{no},
+                   #{gender},
+                   #{phone},
+                   #{idCard},
+                   #{isCollege},
+                   #{address},
+                   #{degree},
+                   #{graduationDate},
+                   #{clazzId},
+                   #{createTime},
+                   #{updateTime}
+               )
+    </insert>
+    <delete id="delete">
+        delete from student where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="update" parameterType="com.wyt.pojo.Student">
+        UPDATE student
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="no != null and no != ''">no = #{no},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+            <if test="isCollege != null">is_college = #{isCollege},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="degree != null">degree = #{degree},</if>
+            <if test="graduationDate != null">graduation_date = #{graduationDate},</if>
+            <if test="clazzId != null">clazz_id = #{clazzId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateScore">
+    UPDATE student
+    SET
+        violation_score = #{violationScore },
+        violation_count = #{violationCount },
+        update_time = #{updateTime}
+    WHERE id = #{id}
+</update>
+    <select id="countStuData" resultType="java.util.Map">
+        SELECT
+        c.name as clazzList,
+        COUNT(*) AS dataList
+        FROM student s left join clazz c on s.clazz_id=c.id
+        group by clazz_id
+    </select>
+    <select id="countStuDegreeData" resultType="java.util.Map">
+        SELECT
+        (CASE
+        WHEN degree = 1 THEN '初中'
+        WHEN degree = 2 THEN '高中'
+        WHEN degree = 3 THEN '大专'
+        WHEN degree = 4 THEN '本科'
+        WHEN degree = 5 THEN '硕士'
+        WHEN degree = 6 THEN '博士'
+        ELSE '其他'
+        END) AS name,
+        COUNT(*) AS value
+        FROM student
+        GROUP BY degree;
+    </select>
+
+</mapper>
