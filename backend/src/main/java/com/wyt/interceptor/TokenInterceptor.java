@@ -1,5 +1,6 @@
 package com.wyt.interceptor;
 
+import com.wyt.Utils.CurrentHolder;
 import com.wyt.Utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,11 @@ public class TokenInterceptor implements HandlerInterceptor {
         //5. 解析token，如果解析失败，返回错误结果（未登录）。
         try {
             JwtUtils.parseJWT(jwt);
+            Integer empId = (Integer) JwtUtils.parseJWT(jwt).get("id");
+
+            // 存入 ThreadLocal
+            CurrentHolder.setCurrentId(empId);
+            log.info("解析令牌成功, 获取员工id: {}", empId);
         } catch (Exception e) {
             e.printStackTrace();
             log.info("解析令牌失败, 返回错误结果");
@@ -39,6 +45,10 @@ public class TokenInterceptor implements HandlerInterceptor {
         //6. 放行。
         log.info("令牌合法, 放行");
         return true;
+    }
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        CurrentHolder.remove();
     }
 
 }

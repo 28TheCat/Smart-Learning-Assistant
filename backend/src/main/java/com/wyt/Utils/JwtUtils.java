@@ -23,6 +23,10 @@ public class JwtUtils {
                 .setExpiration(new Date(System.currentTimeMillis() + expire))
                 .compact();
         return jwt;
+//        return Jwts.builder()
+//                .addClaims(claims)
+//                .signWith(SignatureAlgorithm.HS256, signKey)
+//                .compact();
     }
 
     /**

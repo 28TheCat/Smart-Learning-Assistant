@@ -1,8 +1,9 @@
 package com.wyt.aop;
 
-import com.wyt.anno.Log;
+import com.wyt.Utils.CurrentHolder;
 import com.wyt.mapper.OperateLogMapper;
 import com.wyt.pojo.OperateLog;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+@Slf4j
 @Aspect
 @Component
 public class OperationLogAspect {
@@ -18,36 +20,34 @@ public class OperationLogAspect {
     @Autowired
     private OperateLogMapper operateLogMapper;
 
-    // 环绕通知
-    @Around("@annotation(log)")
-    public Object around(ProceedingJoinPoint joinPoint, Log log) throws Throwable {
-        // 记录开始时间
+    @Around("@annotation(com.wyt.anno.Log)")
+    public Object logOperation(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
-        // 执行方法
+        // 执行目标方法
         Object result = joinPoint.proceed();
-        // 当前时间
+        // 计算耗时
         long endTime = System.currentTimeMillis();
-        // 耗时
         long costTime = endTime - startTime;
 
-        // 构建日志对象
-        OperateLog operateLog = new OperateLog();
-        operateLog.setOperateEmpId(getCurrentUserId()); // 需要实现 getCurrentUserId 方法
-        operateLog.setOperateTime(LocalDateTime.now());
-        operateLog.setClassName(joinPoint.getTarget().getClass().getName());
-        operateLog.setMethodName(joinPoint.getSignature().getName());
-        operateLog.setMethodParams(Arrays.toString(joinPoint.getArgs()));
-        operateLog.setReturnValue(result.toString());
-        operateLog.setCostTime(costTime);
+        // 构建日志实体
+        OperateLog olog = new OperateLog();
+        olog.setOperateEmpId(getCurrentUserId()); // 这里需要你根据实际情况获取当前用户ID
+        olog.setOperateTime(LocalDateTime.now());
+        olog.setClassName(joinPoint.getTarget().getClass().getName());
+        olog.setMethodName(joinPoint.getSignature().getName());
+        olog.setMethodParams(Arrays.toString(joinPoint.getArgs()));
+        olog.setReturnValue(result != null ? result.toString() : "void");
+        olog.setCostTime(costTime);
 
-        // 插入日志
-        operateLogMapper.insert(operateLog);
+        // 保存日志
+        log.info("记录操作日志: {}", olog);
+        operateLogMapper.insert(olog);
+
         return result;
     }
 
-    // 示例方法，获取当前用户ID
-    private int getCurrentUserId() {
-        // 这里应该根据实际情况从认证信息中获取当前登录用户的ID
-        return 1; // 示例返回值
+    private Integer getCurrentUserId() {
+        log.info("获取当前用户ID{}",CurrentHolder.getCurrentId());
+        return CurrentHolder.getCurrentId();
     }
 }
