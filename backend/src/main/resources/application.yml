@@ -1,0 +1,38 @@
+#配置数据库连接信息
+spring:
+  application:
+    name: demo
+
+  datasource:
+    url: jdbc:mysql://192.168.100.128:3306/tlias?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    servlet:
+      multipart:
+        max-file-size: 10MB #单个文件最大大小限制10MB
+        max-request-size: 100MB #单个请求最大大小限制100MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.wyt.demo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  reasonable: true
+  helper-dialect: mysql
+
+logging:
+  level:
+    org.springframework.jdbc.datasource.DataSourceTransactionManager: DEBUG
+    org.springframework.jdbc.support.JdbcTransactionManager: DEBUG
+    org.springframework.transaction.interceptor: DEBUG
+
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucket-name: wangyating
+    region: cn-beijing
+
+debug: true

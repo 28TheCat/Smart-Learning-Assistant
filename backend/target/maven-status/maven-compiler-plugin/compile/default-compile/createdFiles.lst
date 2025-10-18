@@ -13,8 +13,10 @@ com\wyt\Utils\AliyunOSSProperties.class
 com\wyt\service\EmpLogService.class
 com\wyt\mapper\OperateLogMapper.class
 com\wyt\service\impl\EmpLogServiceImpl.class
+com\wyt\Utils\CurrentHolder.class
 com\wyt\controller\StudentController.class
 com\wyt\anno\Log.class
+com\wyt\service\OperateLogService.class
 com\wyt\aop\OperationLogAspect.class
 com\wyt\service\impl\DeptServiceImpl.class
 com\wyt\pojo\EmpQueryParam.class
@@ -23,6 +25,7 @@ com\wyt\pojo\EmpLog.class
 com\wyt\pojo\OperateLog.class
 com\wyt\service\impl\EmpServiceImpl.class
 com\wyt\controller\SessionController.class
+com\wyt\service\impl\OperateLogServiceImpl.class
 com\wyt\pojo\PageResult.class
 com\wyt\interceptor\TokenInterceptor.class
 com\wyt\pojo\LoginInfo.class
@@ -45,8 +48,10 @@ com\wyt\service\DeptService.class
 com\wyt\pojo\Clazz.class
 com\wyt\interceptor\Demointerceptor.class
 com\wyt\mapper\EmpExprMapper.class
+com\wyt\controller\OperateLogController.class
 com\wyt\mapper\EmpMapper.class
 com\wyt\pojo\EmpExpr.class
 com\wyt\pojo\Result.class
 com\wyt\Utils\AliyunOSSOperator.class
+com\wyt\pojo\OperateLogQueryParam.class
 com\wyt\service\StudentService.class

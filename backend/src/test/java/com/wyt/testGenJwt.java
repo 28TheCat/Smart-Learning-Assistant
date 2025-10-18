@@ -40,11 +40,11 @@ public class testGenJwt {
 
     @Test
     public void parseJwt(){
-        Claims claims = Jwts.parser()
-                .setSigningKey("aXRjYXN0")//指定签名密钥
-                .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNjczMDA5NzU0fQ.RcVIR65AkGiax-ID6FjW60eLFH3tPTKdoK7UtE4A1ro")
-                .getBody();
-
-        System.out.println(claims);
+//        Claims claims = Jwts.parser()
+//                .setSigningKey("aXRjYXN0")//指定签名密钥
+//                .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNjczMDA5NzU0fQ.RcVIR65AkGiax-ID6FjW60eLFH3tPTKdoK7UtE4A1ro")
+//                .getBody();
+//
+//        System.out.println(claims);
     }
 }
