@@ -1,21 +1,21 @@
-#配置数据库连接信息
 spring:
   application:
     name: demo
 
   datasource:
-    url: jdbc:mysql://192.168.100.128:3306/tlias?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    servlet:
-      multipart:
-        max-file-size: 10MB #单个文件最大大小限制10MB
-        max-request-size: 100MB #单个请求最大大小限制100MB
+
+  servlet:
+    multipart:
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE:10MB}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:100MB}
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.wyt.demo.entity
+  mapper-locations: classpath:com/wyt/mapper/*.xml
+  type-aliases-package: com.wyt.pojo
   configuration:
     map-underscore-to-camel-case: true
 
@@ -25,14 +25,14 @@ pagehelper:
 
 logging:
   level:
-    org.springframework.jdbc.datasource.DataSourceTransactionManager: DEBUG
-    org.springframework.jdbc.support.JdbcTransactionManager: DEBUG
-    org.springframework.transaction.interceptor: DEBUG
+    org.springframework.jdbc.datasource.DataSourceTransactionManager: INFO
+    org.springframework.jdbc.support.JdbcTransactionManager: INFO
+    org.springframework.transaction.interceptor: INFO
 
 aliyun:
   oss:
-    endpoint: https://oss-cn-beijing.aliyuncs.com
-    bucket-name: wangyating
-    region: cn-beijing
+    endpoint: ${ALIYUN_OSS_ENDPOINT}
+    bucket-name: ${ALIYUN_OSS_BUCKET_NAME}
+    region: ${ALIYUN_OSS_REGION}
 
-debug: true
+debug: false

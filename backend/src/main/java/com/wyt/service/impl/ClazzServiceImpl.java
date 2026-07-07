@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.wyt.mapper.ClazzMapper;
 import com.wyt.pojo.*;
 import com.wyt.service.ClazzService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ClazzServiceImpl implements ClazzService {
     @Autowired
@@ -41,9 +43,7 @@ public class ClazzServiceImpl implements ClazzService {
 
             clazzMapper.insert(clazz);
         }catch (Exception e) {
-            // 打印异常日志
-            e.printStackTrace();
-            // 事务会自动回滚
+            log.error("保存班级失败 clazz={}", clazz, e);
             throw e;
         }
     }

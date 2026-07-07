@@ -1,14 +1,42 @@
 <script setup>
-  import { ref } from 'vue'
-  
-  let loginForm = ref({username:'', password:''})
-  
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { loginApi } from '@/api/login'
+import { setToken } from '@/utils/auth'
+
+const router = useRouter()
+const loginForm = ref({ username: '', password: '' })
+
+const handleLogin = async () => {
+  if (!loginForm.value.username || !loginForm.value.password) {
+    ElMessage.warning('请输入用户名和密码')
+    return
+  }
+
+  try {
+    const result = await loginApi(loginForm.value)
+    if (result.code) {
+      setToken(result.data.token)
+      ElMessage.success('登录成功')
+      router.replace('/index')
+    } else {
+      ElMessage.error(result.msg || '登录失败')
+    }
+  } catch (error) {
+    ElMessage.error(error?.response?.data?.msg || '登录失败，请稍后再试')
+  }
+}
+
+const handleReset = () => {
+  loginForm.value = { username: '', password: '' }
+}
 </script>
 
 <template>
   <div id="container">
     <div class="login-form">
-      <el-form label-width="80px">
+      <el-form label-width="80px" @keyup.enter="handleLogin">
         <p class="title">Tlias智能学习辅助系统</p>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名"></el-input>
@@ -19,8 +47,8 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button class="button" type="primary" @click="">登 录</el-button>
-          <el-button class="button" type="info" @click="">重 置</el-button>
+          <el-button class="button" type="primary" @click="handleLogin">登 录</el-button>
+          <el-button class="button" type="info" @click="handleReset">重 置</el-button>
         </el-form-item>
       </el-form>
     </div>

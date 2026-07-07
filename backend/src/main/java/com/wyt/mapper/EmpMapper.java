@@ -2,7 +2,7 @@ package com.wyt.mapper;
 
 import com.wyt.pojo.Emp;
 import com.wyt.pojo.EmpQueryParam;
-import com.wyt.pojo.LoginInfo;
+import com.wyt.pojo.LoginParam;
 import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;
@@ -38,5 +38,5 @@ public interface EmpMapper {
     ArrayList<Emp> findAll();
 
     @Select("select * from emp where username = #{username} and password = #{password}")
-    Emp getUsernameAndPassword(Emp emp);
+    Emp getUsernameAndPassword(LoginParam loginParam);
 }

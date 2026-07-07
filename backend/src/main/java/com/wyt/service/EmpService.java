@@ -2,6 +2,7 @@ package com.wyt.service;
 
 import com.wyt.pojo.Emp;
 import com.wyt.pojo.EmpQueryParam;
+import com.wyt.pojo.LoginParam;
 import com.wyt.pojo.LoginInfo;
 import com.wyt.pojo.PageResult;
 
@@ -23,5 +24,5 @@ public interface EmpService {
 
     ArrayList<Emp> findAll();
 
-    LoginInfo login(Emp emp);
+    LoginInfo login(LoginParam loginParam);
 }

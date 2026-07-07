@@ -1,9 +1,6 @@
 package com.wyt.controller;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.wyt.anno.Log;
-import com.wyt.mapper.EmpMapper;
 import com.wyt.pojo.Emp;
 import com.wyt.pojo.EmpQueryParam;
 import com.wyt.pojo.PageResult;
@@ -23,8 +20,6 @@ import java.util.List;
 public class EmpController {
     @Autowired
     private EmpService empService;
-    @Autowired
-    private EmpMapper empMapper;
 
     @GetMapping("/list")
     public Result findAll() {

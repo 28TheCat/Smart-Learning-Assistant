@@ -56,7 +56,7 @@ public class ClazzController {
     @Log
     @PutMapping()
     public Result update(@RequestBody Clazz clazz){
-        System.out.println("修改班级, clazz=" + clazz);
+        log.info("修改班级: {}", clazz);
         clazzService.update(clazz);
         return Result.success();
     }

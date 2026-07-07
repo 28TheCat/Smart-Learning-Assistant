@@ -1,14 +1,12 @@
 package com.wyt.controller;
 
 import com.wyt.anno.Log;
-import com.wyt.mapper.StudentMapper;
 import com.wyt.pojo.PageResult;
 import com.wyt.pojo.Result;
 import com.wyt.pojo.Student;
 import com.wyt.pojo.StudentQueryParam;
 import com.wyt.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +18,6 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
-    @Autowired
-    private StudentMapper studentMapper;
 
     @GetMapping
     public Result page(StudentQueryParam studentQueryParam){

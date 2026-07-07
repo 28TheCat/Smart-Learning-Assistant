@@ -53,13 +53,11 @@ public class EmpServiceImpl implements EmpService {
             }
 
         } catch (Exception e) {
-            // 打印异常日志
-            e.printStackTrace();
-            // 事务会自动回滚
+            log.error("保存员工失败 emp={}", emp, e);
             throw e;
         } finally {
             // 记录操作日志，无论事务是否成功
-            EmpLog empLog = new EmpLog(null, LocalDateTime.now(), emp.toString());
+            EmpLog empLog = new EmpLog(null, LocalDateTime.now(), String.valueOf(emp));
             empLogService.insertLog(empLog);
         }
     }
@@ -98,8 +96,8 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    public LoginInfo login(Emp emp) {
-        Emp empLogin = empMapper.getUsernameAndPassword(emp);
+    public LoginInfo login(LoginParam loginParam) {
+        Emp empLogin = empMapper.getUsernameAndPassword(loginParam);
         if(empLogin != null){
             Map<String,Object> claims= new HashMap<>();
             claims.put("id", empLogin.getId());

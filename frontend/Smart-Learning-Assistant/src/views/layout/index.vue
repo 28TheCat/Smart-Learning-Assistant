@@ -1,4 +1,25 @@
 <script setup>
+import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { removeToken } from '@/utils/auth'
+
+const router = useRouter()
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+
+    removeToken()
+    ElMessage.success('已退出登录')
+    router.replace('/login')
+  } catch {
+    // 用户取消退出
+  }
+}
 
 </script>
 
@@ -9,10 +30,10 @@
       <el-header class="header">
         <span class="title">智学助手</span>
         <span class="right_tool">
-          <a href="">
+          <a href="javascript:;">
             <el-icon><EditPen /></el-icon> 修改密码 &nbsp;&nbsp;&nbsp; |  &nbsp;&nbsp;&nbsp;
           </a>
-          <a href="">
+          <a href="javascript:;" @click.prevent="handleLogout">
             <el-icon><SwitchButton /></el-icon> 退出登录
           </a>
         </span>

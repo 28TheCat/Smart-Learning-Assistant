@@ -2,6 +2,7 @@ package com.wyt.interceptor;
 
 import com.wyt.Utils.CurrentHolder;
 import com.wyt.Utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +30,14 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         //5. 解析token，如果解析失败，返回错误结果（未登录）。
         try {
-            JwtUtils.parseJWT(jwt);
-            Integer empId = (Integer) JwtUtils.parseJWT(jwt).get("id");
+            Claims claims = JwtUtils.parseJWT(jwt);
+            Integer empId = ((Number) claims.get("id")).intValue();
 
             // 存入 ThreadLocal
             CurrentHolder.setCurrentId(empId);
             log.info("解析令牌成功, 获取员工id: {}", empId);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.info("解析令牌失败, 返回错误结果");
+            log.warn("解析令牌失败, 返回未授权响应: {}", e.getMessage());
             response.setStatus(HttpStatus.SC_UNAUTHORIZED);
             return false;
         }
