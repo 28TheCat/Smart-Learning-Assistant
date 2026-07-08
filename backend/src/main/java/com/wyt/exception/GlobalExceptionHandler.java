@@ -2,6 +2,7 @@ package com.wyt.exception;
 
 import com.wyt.pojo.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,6 +24,14 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(AuthException.class)
+    public Result handleAuthException(AuthException e, HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        log.warn("未登录或令牌失效 method={} uri={} errorCode={} message={}",
+                request.getMethod(), request.getRequestURI(), e.getErrorCode().getCode(), e.getMessage());
+        return Result.error(e.getErrorCode(), e.getMessage());
+    }
+
     @ExceptionHandler(BusinessException.class)
     public Result handleBusinessException(BusinessException e, HttpServletRequest request) {
         log.warn("业务异常 method={} uri={} errorCode={} message={}",
@@ -83,6 +94,20 @@ public class GlobalExceptionHandler {
         log.warn("请求参数类型错误 method={} uri={} errorCode={} parameter={} value={}",
                 request.getMethod(), request.getRequestURI(), ErrorCode.PARAM_ERROR.getCode(), e.getName(), e.getValue());
         return Result.error(ErrorCode.PARAM_ERROR, message);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public Result handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e, HttpServletRequest request) {
+        log.warn("上传文件过大 method={} uri={} errorCode={} message={}",
+                request.getMethod(), request.getRequestURI(), ErrorCode.PARAM_ERROR.getCode(), e.getMessage());
+        return Result.error(ErrorCode.PARAM_ERROR, "上传文件大小不能超过10MB");
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public Result handleMultipartException(MultipartException e, HttpServletRequest request) {
+        log.warn("上传请求解析失败 method={} uri={} errorCode={} message={}",
+                request.getMethod(), request.getRequestURI(), ErrorCode.PARAM_ERROR.getCode(), e.getMessage());
+        return Result.error(ErrorCode.PARAM_ERROR, "上传文件不能为空或请求格式不正确");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

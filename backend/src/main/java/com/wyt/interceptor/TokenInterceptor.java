@@ -3,10 +3,11 @@ package com.wyt.interceptor;
 import com.wyt.Utils.CurrentHolder;
 import com.wyt.Utils.JwtUtils;
 import io.jsonwebtoken.Claims;
+import com.wyt.exception.AuthException;
+import com.wyt.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,6 +15,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
+    private final JwtUtils jwtUtils;
+
+    public TokenInterceptor(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -24,13 +31,12 @@ public class TokenInterceptor implements HandlerInterceptor {
         //4. 判断令牌是否存在，如果不存在，返回错误结果（未登录）。
         if(!StringUtils.hasLength(jwt)){ //jwt为空
             log.info("获取到jwt令牌为空, 返回错误结果");
-            response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-            return false;
+            throw new AuthException(ErrorCode.UNAUTHORIZED);
         }
 
         //5. 解析token，如果解析失败，返回错误结果（未登录）。
         try {
-            Claims claims = JwtUtils.parseJWT(jwt);
+            Claims claims = jwtUtils.parseJWT(jwt);
             Integer empId = ((Number) claims.get("id")).intValue();
 
             // 存入 ThreadLocal
@@ -38,8 +44,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             log.info("解析令牌成功, 获取员工id: {}", empId);
         } catch (Exception e) {
             log.warn("解析令牌失败, 返回未授权响应: {}", e.getMessage());
-            response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-            return false;
+            throw new AuthException(ErrorCode.UNAUTHORIZED);
         }
 
         //6. 放行。

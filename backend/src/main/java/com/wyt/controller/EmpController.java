@@ -37,7 +37,7 @@ public class EmpController {
     @Log
     @PostMapping
     public Result save(@RequestBody Emp emp){
-        log.info("新增员工：{}",emp);
+        log.info("新增员工 username={}", emp.getUsername());
         empService.save(emp);
         return Result.success();
     }
@@ -60,7 +60,7 @@ public class EmpController {
     @Log
     @PutMapping
     public Result update(@RequestBody Emp emp){
-        log.info("修改员工信息：{}", emp);
+        log.info("修改员工信息 id={}, username={}", emp.getId(), emp.getUsername());
         empService.update(emp);
         return Result.success();
     }

@@ -1,12 +1,14 @@
 package com.wyt;
 
+import com.wyt.Utils.JwtUtils;
+
 import java.util.Map;
-import static com.wyt.Utils.JwtUtils.generateJwt;
 
 public class Main {
     public static void main(String[] args){
         Map<String, Object> claims = Map.of("id", 2); // 测试用户ID
-        String token =generateJwt(claims);
+        JwtUtils jwtUtils = new JwtUtils("test-sign-key-for-local-main", 43200000L, "");
+        String token = jwtUtils.generateJwt(claims);
         System.out.println("测试JWT: " + token);
     }
 

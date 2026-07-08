@@ -83,6 +83,7 @@ CREATE DATABASE tlias CHARACTER SET utf8mb4;
 $env:DB_URL="jdbc:mysql://localhost:3306/tlias?useSSL=false&serverTimezone=UTC"
 $env:DB_USERNAME="root"
 $env:DB_PASSWORD="root"
+$env:JWT_SIGN_KEY="replace-with-a-long-random-secret"
 ```
 
 如果需要使用阿里云 OSS 上传功能，还需要配置：
@@ -92,6 +93,8 @@ $env:ALIYUN_OSS_ENDPOINT="your-endpoint"
 $env:ALIYUN_OSS_BUCKET_NAME="your-bucket"
 $env:ALIYUN_OSS_REGION="your-region"
 ```
+
+JWT 默认有效期为 12 小时，可通过 `JWT_EXPIRE_MILLIS` 调整。轮换 JWT 密钥时，将新密钥写入 `JWT_SIGN_KEY`，并把仍需兼容的旧密钥以逗号分隔写入 `JWT_PREVIOUS_SIGN_KEYS`。
 
 ---
 

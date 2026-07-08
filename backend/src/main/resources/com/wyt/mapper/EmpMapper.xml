@@ -77,7 +77,6 @@
         update emp
         <set>
             <if test="username != null and username != ''">username = #{username},</if>
-            <if test="password != null and password != ''">password = #{password},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="gender != null">gender = #{gender},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>

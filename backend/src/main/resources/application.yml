@@ -35,4 +35,10 @@ aliyun:
     bucket-name: ${ALIYUN_OSS_BUCKET_NAME}
     region: ${ALIYUN_OSS_REGION}
 
+app:
+  jwt:
+    sign-key: ${JWT_SIGN_KEY}
+    expire-millis: ${JWT_EXPIRE_MILLIS:43200000}
+    previous-sign-keys: ${JWT_PREVIOUS_SIGN_KEYS:}
+
 debug: false
